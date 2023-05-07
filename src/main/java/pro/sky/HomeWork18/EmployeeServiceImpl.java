@@ -5,56 +5,69 @@ import pro.sky.HomeWork18.exception.EmployeeAlreadyAddedException;
 import pro.sky.HomeWork18.exception.EmployeeNotFoundException;
 import pro.sky.HomeWork18.exception.EmployeeStorageIsFullException;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-    private final List<Employee> employees;
+    private final int EMPLOYESS_STORAGE_SIZE=5;
+    private final Map<String,Employee> employees=new HashMap<>();
 
-    public EmployeeServiceImpl() {
-        employees = new ArrayList<>();
-    }
+
+
+
+
 
     @Override
     public Employee addEmployee(String firstName, String lastName) {
-        Employee employee = new Employee(firstName, lastName);
-        if(employees.contains(employee)){
+        String employeeKey=getEmployeeKey(firstName,lastName);
+        if(employees.containsKey(employeeKey)){
             throw new EmployeeAlreadyAddedException();
         }
+        if(employees.size()==EMPLOYESS_STORAGE_SIZE){
+            throw new EmployeeStorageIsFullException();
+        }
+        employees.put
+                (employeeKey,
+                 new Employee(firstName, lastName));
 
-        employees.add(employee);
-        return employee;
+
+        return employees.get(employeeKey);
 
     }
 
     @Override
-    public Employee removeEmployee(String firstName, String lastName) {
-        Employee employee = new Employee(firstName, lastName);
-        if (!employees.contains(employee)){
-        throw new EmployeeNotFoundException();
+    public void removeEmployee(String firstName, String lastName) {
+        String employeeKey=getEmployeeKey(firstName,lastName);
+        if (!employees.containsKey(employeeKey)) {
+            throw new EmployeeNotFoundException();
         }
-        employees.remove(employee);
-            return employee;
-        }
+        employees.remove(employeeKey);
+
+
+
+    }
+
 
     @Override
     public Employee findEmployee(String firstName, String lastName) {
-        Employee findEmployee = new Employee(firstName, lastName);
-        for (Employee employee : employees) {
-            if (employee.equals(findEmployee)) {
-                return employee;
-            }
-
+        String employeeKey=getEmployeeKey(firstName,lastName);
+        if (!employees.containsKey(employeeKey)){
+            throw new EmployeeNotFoundException();
         }
+        return employees.get(employeeKey);
 
-        return null;
+
     }
 
     @Override
-    public List<Employee> getAllEmployees() {
+    public Map<String, Employee> getAllEmployees() {
         return employees;
     }
-
+    private String getEmployeeKey(String firstName, String lastName){
+        return firstName+lastName;
+    }
 }
+
+
 

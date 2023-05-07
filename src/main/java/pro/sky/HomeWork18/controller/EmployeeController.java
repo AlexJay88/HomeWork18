@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pro.sky.HomeWork18.Employee;
 import pro.sky.HomeWork18.EmployeeService;
-import pro.sky.HomeWork18.exception.EmployeeNotFoundException;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/employees")
@@ -18,28 +18,44 @@ public class EmployeeController {
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
+
     @GetMapping("/add")
-    public Employee addEmployee(@RequestParam String firstName,@RequestParam String lastName){
-      return   employeeService.addEmployee(firstName,lastName);
+    public Employee addEmployee(@RequestParam String firstName, @RequestParam String lastName) {
+        return employeeService.addEmployee(firstName, lastName);
 
     }
+
     @GetMapping("/remove")
-    public Employee removeEmployee(@RequestParam String firstName,@RequestParam String lastName){
-        return   employeeService.removeEmployee(firstName,lastName);
+    public void removeEmployee(@RequestParam String firstName, @RequestParam String lastName) {
+        employeeService.removeEmployee(firstName, lastName);
     }
+
     @GetMapping("/find")
-    public Employee findEmployee(@RequestParam String firstName,@RequestParam String lastName){
-        Employee employee = employeeService.findEmployee(firstName, lastName);
-        if (employee==null){
-            throw new EmployeeNotFoundException();
-        }
-        return employee;
+    public Employee findEmployee(@RequestParam String firstName, @RequestParam String lastName) {
+
+
+        return employeeService.findEmployee(firstName,lastName);
     }
 
     @GetMapping
-    public List<Employee> getAllEmployees(){
+    public Map<String, Employee> getAllEmployees() {
         return   employeeService.getAllEmployees();
+
     }
+
+    Map<String, Integer> numbersMap = new HashMap<>();
+
+    {
+        numbersMap.put("один", 1);
+        numbersMap.put("два",2);
+        System.out.println(numbersMap);
+
+        System.out.println(numbersMap.get("один"));
+        System.out.println(numbersMap.size());
+        System.out.println("numbersMap.toString() = " + numbersMap.toString());
+
+    }
+    @GetMapping("/nameadd")
+  public String getProffesion(){
+    return "вася";}
 }
-
-
